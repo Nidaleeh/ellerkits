@@ -6,7 +6,6 @@ import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
 import org.bukkit.Material;
 import org.bukkit.entity.Entity;
-import org.bukkit.entity.EntityType;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
@@ -19,7 +18,6 @@ import org.bukkit.event.player.PlayerRespawnEvent;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.ItemMeta;
 
-import me.ekits.abilities.Wolf;
 import me.ekits.main.Main;
 
 public class PlayerListeners implements Listener{
@@ -59,15 +57,17 @@ public class PlayerListeners implements Listener{
 			e.setDeathMessage("" + ChatColor.GREEN + pname + ChatColor.AQUA + " got rekt by an " + ChatColor.DARK_RED + ChatColor.BOLD + "ADMIN");
 			if(plugin.tamedwolf.contains(p.getName())){
 				for(Entity wolf : Bukkit.getServer().getWorld(p.getWorld().getName()).getEntities()){
-					Wolf wolf = (Wolf) p.getWorld().spawnEntity(p.getLocation(), EntityType.WOLF);
-					wolf.setOwner(p);
+					if(((org.bukkit.entity.Wolf) wolf).isTamed()){
+						if(((org.bukkit.entity.Wolf) wolf).getOwner() == p){
+							((org.bukkit.entity.Wolf) wolf).damage(99999);
+						}
+					}
 					
 							
 						
 					}
 				}
 			}
-		}
 		plugin.kitused.remove(p.getName());
 		plugin.assassin2.remove(p.getName());
 		plugin.assassin.remove(p.getName());
@@ -89,6 +89,8 @@ public class PlayerListeners implements Listener{
 		plugin.hit.remove(p.getName());
 		plugin.tamedwolf.remove(p.getName());
 		}
+		
+		
 	@EventHandler
 	public void onSpawn(PlayerRespawnEvent e){
 		Player p = e.getPlayer();
